@@ -2,6 +2,7 @@ package fa.training.A201.entities;
 
 
 import org.hibernate.Hibernate;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -13,9 +14,10 @@ import java.util.Objects;
 @Table(name = "MOVIE")
 public class Movie {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "MOVIE_ID", nullable = false)
-    private Integer id;
+    @GenericGenerator(name = "movie_id_gennerator", strategy = "fa.training.A201.utils.MovieIdGenerator")
+    @GeneratedValue(generator = "movie_id_gennerator")
+    @Column(name = "MOVIE_ID", length = 10)
+    private String id;
 
     @Column(name = "ACTOR")
     private String actor;
@@ -26,7 +28,7 @@ public class Movie {
     @Column(name = "DIRECTOR")
     private String director;
 
-    @Column(name = "DURATION", columnDefinition = "decimal", scale = 2, precision = 5)
+    @Column(name = "DURATION", columnDefinition="Decimal(5,2)")
     private BigDecimal duration;
 
     @Column(name = "FROM_DATE", columnDefinition = "date")
@@ -56,11 +58,33 @@ public class Movie {
     @OneToMany(mappedBy = "id.movie")
     private List<MovieType> movieTypeList;
 
-    public int getId() {
+    public Movie() {
+    }
+
+    public Movie(String actor, String content, String director, BigDecimal duration, LocalDate fromDate,
+                 LocalDate toDate,
+                 String movieProductionCompany, String version, String movieNameEng, String movieNameVn,
+                 String largeImg,
+                 String smallImg) {
+        this.actor = actor;
+        this.content = content;
+        this.director = director;
+        this.duration = duration;
+        this.fromDate = fromDate;
+        this.toDate = toDate;
+        this.movieProductionCompany = movieProductionCompany;
+        this.version = version;
+        this.movieNameEng = movieNameEng;
+        this.movieNameVn = movieNameVn;
+        this.largeImg = largeImg;
+        this.smallImg = smallImg;
+    }
+
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
