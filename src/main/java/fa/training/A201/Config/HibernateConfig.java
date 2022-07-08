@@ -65,7 +65,7 @@ public class HibernateConfig {
                         .getTypesAnnotatedWith(Entity.class);
 
                 if (classes.isEmpty()) {
-                    System.out.println("Faild to scan Entities.");
+                    System.out.println("Fail to scan Entities.");
                     return null;
                 }
 

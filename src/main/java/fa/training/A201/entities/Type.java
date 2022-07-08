@@ -1,51 +1,66 @@
 package fa.training.A201.entities;
 
-import org.hibernate.Hibernate;
-
-import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+import org.hibernate.Hibernate;
 
+@Getter
+@Setter
+@ToString
 @Entity
 @Table(name = "TYPE")
 public class Type {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
-    private Integer id;
+    @Column(name = "TYPE_ID")
+    private Integer typeId;
 
     @Column(name = "TYPE_NAME")
-    private String name;
+    private String typeName;
 
-    @Column(name = "TYPE_DESCRIPTON")
-    private String description;
+    @Column(name = "TYPE_DESCRIPTION")
+    private String typeDescription;
 
-    @OneToMany(mappedBy = "id.type")
-    private List<MovieType> movieTypes;
+    @ToString.Exclude
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "type", fetch = FetchType.EAGER)
+    private Set<MovieType> movies = new HashSet<>();
 
     public Type() {
     }
 
-    public Type(String name, String description, List<MovieType> movieTypes) {
-        this.name = name;
-        this.description = description;
-        this.movieTypes = movieTypes;
-    }
-
-    @Override
-    public String toString() {
-        return getClass().getSimpleName() + "(" +
-                "id = " + id + ", " +
-                "name = " + name + ", " +
-                "description = " + description + ")";
+    public Type(String typeName, String typeDescription) {
+        this.typeName = typeName;
+        this.typeDescription = typeDescription;
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) {
+            return false;
+        }
         Type type = (Type) o;
-        return id != null && Objects.equals(id, type.id);
+        return typeId != null && Objects.equals(typeId, type.typeId);
     }
 
     @Override

@@ -1,60 +1,66 @@
 package fa.training.A201.entities;
 
+import java.util.Objects;
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
+import javax.persistence.EmbeddedId;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.MapsId;
+import javax.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.Hibernate;
 
-import javax.persistence.*;
-import java.util.Objects;
-
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
+@ToString
 @Entity
 @Table(name = "MOVIE_TYPE")
 public class MovieType {
     @EmbeddedId
-    private MovieTypePK id;
+    private MovieTypePk movieTypePk;
+
+    @ManyToOne
+    @MapsId(value = "movieId")
+    @JoinColumn(name = "MOVIE_ID", columnDefinition = "varchar(10)")
+    private Movie movie;
+
+    @ManyToOne
+    @MapsId(value = "typeId")
+    @JoinColumn(name = "TYPE_ID")
+    private Type type;
 
     @Column(name = "MT_DESCRIPTION")
     private String mtDescription;
 
-    public MovieType() {
-    }
-
-    public MovieType(MovieTypePK id, String mtDescription) {
-        this.id = id;
-        this.mtDescription = mtDescription;
-    }
-
-    public MovieTypePK getId() {
-        return id;
-    }
-
-    public void setId(MovieTypePK id) {
-        this.id = id;
-    }
-
-    public String getMtDescription() {
-        return mtDescription;
-    }
-
-    public void setMtDescription(String mtDescription) {
-        this.mtDescription = mtDescription;
+    public MovieType(Movie movie, Type type) {
+        this.movie = movie;
+        this.type = type;
+        this.movieTypePk = new MovieTypePk(movie.getMovieId(), type.getTypeId());
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof MovieType)) {
+            return false;
+        }
         MovieType movieType = (MovieType) o;
-        return id != null && Objects.equals(id, movieType.id);
+        return Objects.equals(movie, movieType.movie) && Objects.equals(type, movieType.type);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
-    }
-
-    @Override
-    public String toString() {
-        return getClass().getSimpleName() + "(" +
-                "EmbeddedId = " + id + ", " +
-                "mtDescription = " + mtDescription + ")";
+        return Objects.hash(movieTypePk);
     }
 }

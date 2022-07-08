@@ -6,7 +6,6 @@ import org.hibernate.id.IdentifierGenerator;
 import org.hibernate.jdbc.Work;
 
 import java.io.Serializable;
-import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
